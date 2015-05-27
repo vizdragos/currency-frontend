@@ -13,6 +13,7 @@
 	function TradeController(CONSTANTS, TradeService) {
 		var vm = this;
 
+
 		var COUNTRIES = ['RO', 'FR', 'EN', 'DE', 'US'],
 			CURRENCIES = ['EUR', 'GBP', 'RON', 'USD'];
 
@@ -22,6 +23,10 @@
 				.$promise.then(function (trades) {
 					vm.trades = angular.copy(trades);
 					vm.tradesViaSocket = angular.copy(trades);
+
+					angular.forEach(trades, function (trade) {
+						_filterTradesPerCountry(trade);
+					});
 				})
 		}
 
@@ -54,7 +59,9 @@
 		};
 
 		function _notify(/** Message */ message) {
-			vm.tradesViaSocket.push(angular.fromJson(message.body));
+			var trade = angular.fromJson(message.body);
+			vm.tradesViaSocket.push(trade);
+			_filterTradesPerCountry(trade);
 		};
 
 		function _reconnect() {
@@ -71,6 +78,40 @@
 		};
 
 		_initSockets();
+
+
+		// CHART
+		vm.labels = [];
+		vm.data = [];
+
+		var tradesPerCountry = {};
+
+		function _filterTradesPerCountry(trade) {
+			if (tradesPerCountry[trade.originatingCountry]) {
+				tradesPerCountry[trade.originatingCountry] = tradesPerCountry[trade.originatingCountry] + 1;
+			} else {
+				tradesPerCountry[trade.originatingCountry] = 1;
+			}
+
+			_updateChartLabels();
+			_updateChartData();
+		}
+
+		function _updateChartLabels() {
+			var labels = [];
+			for (var prop in tradesPerCountry) {
+				labels.push(prop);
+			}
+			vm.labels = labels;
+		};
+
+		function _updateChartData() {
+			var data = [];
+			for (var prop in tradesPerCountry) {
+				data.push(tradesPerCountry[prop]);
+			}
+			vm.data = data;
+		};
 	}
 
 })();

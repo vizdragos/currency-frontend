@@ -18,7 +18,8 @@ angular
 		'ngRoute',
 		'ngSanitize',
 		'ngTouch',
-		'ui.router'
+		'ui.router',
+		'chart.js'
 	])
 
 	.constant('CONSTANTS', {

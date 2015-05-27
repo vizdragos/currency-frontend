@@ -4,12 +4,35 @@
 	</button>
 </div>
 
+<div class="panel panel-default small">
+
+	<div class="panel-heading">
+		<span class="panel-title">Socket.IO: Data in chart - trades by country</span>
+	</div>
+
+	<div class="panel-body">
+		<canvas id="pie"
+		        class="chart chart-pie"
+		        data="vm.data"
+		        labels="vm.labels">
+		</canvas>
+
+	</div>
+
+</div>
+
 <hr/>
+
+<div class="btn-group">
+	<button type="button" class="btn btn-success" ng-click="vm.sendMockTrade()">
+		SEND MOCK TRADE
+	</button>
+</div>
 
 <div class="panel panel-default small">
 
 	<div class="panel-heading">
-		<span class="panel-title">Socket.IO</span>
+		<span class="panel-title">Socket.IO: Data in table</span>
 	</div>
 
 	<div class="panel-body">
@@ -51,6 +74,12 @@
 </div>
 
 <hr/>
+
+<div class="btn-group">
+	<button type="button" class="btn btn-success" ng-click="vm.sendMockTrade()">
+		SEND MOCK TRADE
+	</button>
+</div>
 
 <div class="panel panel-default small">
 
