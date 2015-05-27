@@ -1,5 +1,14 @@
 # currency-frontend
 
+Contains both `PULL` and `PUSH` examples: 
+- There is an usual implementation, where the data is requested on demand (PULL)
+- There is also Socket.IO implementation, where data is PUSHed from the server to the frontend; there are 2 implementations in the GUI to visualize this: 
+
+      - data is pushed and presented in a table
+      
+      - data is pushed and presented in a chart
+
+
 ## Prerequisites
 - Install NodeJs 
 - Install Grunt-cli: `npm install grunt-cli -g`
