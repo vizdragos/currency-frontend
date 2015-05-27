@@ -9,6 +9,52 @@
 <div class="panel panel-default small">
 
 	<div class="panel-heading">
+		<span class="panel-title">Socket.IO</span>
+	</div>
+
+	<div class="panel-body">
+		<table class="table table-bordered table-striped table-hover">
+			<thead>
+			<tr>
+				<th>#</th>
+				<th>User Id</th>
+				<th>Currency From</th>
+				<th>Currency To</th>
+				<th>Amount Sell</th>
+				<th>Amount Buy</th>
+				<th>Rate</th>
+				<th>Time</th>
+				<th>Country</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-if="vm.tradesViaSocket.length == 0">
+				<td colspan="9">No trades processed.</td>
+			</tr>
+			<tr ng-if="vm.tradesViaSocket.length > 0"
+			    ng-repeat="trade in vm.tradesViaSocket | orderBy : 'originatingCountry' ">
+				<td>{{$index + 1}}</td>
+				<td>{{trade.userId}}</td>
+				<td>{{trade.currencyFrom}}</td>
+				<td>{{trade.currencyTo}}</td>
+				<td>{{trade.amountSell}}</td>
+				<td>{{trade.amountBuy}}</td>
+				<td>{{trade.rate}}</td>
+				<td>{{trade.timePlaced}}</td>
+				<td>{{trade.originatingCountry}}</td>
+			</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+</div>
+
+<hr/>
+
+<div class="panel panel-default small">
+
+	<div class="panel-heading">
 		<span class="panel-title">Pull: Press 'Refresh' to get latest data</span>
 
 		<div class="btn-group-xs pull-right">

@@ -4,19 +4,25 @@
 	angular
 		.module('currencyApp')
 		.controller('TradeController', [
+			'CONSTANTS',
 			'TradeService',
 			TradeController
 		]
 	);
 
-	function TradeController(TradeService) {
+	function TradeController(CONSTANTS, TradeService) {
 		var vm = this;
 
 		var COUNTRIES = ['RO', 'FR', 'EN', 'DE', 'US'],
 			CURRENCIES = ['EUR', 'GBP', 'RON', 'USD'];
 
 		vm.refresh = function refresh() {
-			vm.trades = TradeService.findAll();
+
+			TradeService.findAll()
+				.$promise.then(function (trades) {
+					vm.trades = angular.copy(trades);
+					vm.tradesViaSocket = angular.copy(trades);
+				})
 		}
 
 		vm.refresh();
@@ -33,13 +39,38 @@
 				amountSell: 1000 * Math.random().toFixed(2),
 				amountBuy: 0,
 				rate: Math.random().toFixed(2),
-				timePlaced: Math.floor((Math.random() * 31) + 1).toString() + '-May-15 ' + Math.floor((Math.random() * 12) + 1).toString() + ':' + Math.floor((Math.random() * 60) + 1).toString()+ ':' + Math.floor((Math.random() * 60) + 1).toString(),
+				timePlaced: Math.floor((Math.random() * 31) + 1).toString() + '-May-15 ' + Math.floor((Math.random() * 12) + 1).toString() + ':' + Math.floor((Math.random() * 60) + 1).toString() + ':' + Math.floor((Math.random() * 60) + 1).toString(),
 				originatingCountry: COUNTRIES[Math.floor((Math.random() * 5) + 0)]
 			};
 			mockTrade.amountBuy = mockTrade.amountSell / mockTrade.rate;
 
 			return mockTrade;
 		}
+
+		//SOCKETIO
+		var socket = {
+			client: null,
+			stomp: null
+		};
+
+		function _notify(/** Message */ message) {
+			vm.tradesViaSocket.push(angular.fromJson(message.body));
+		};
+
+		function _reconnect() {
+			setTimeout(_initSockets, 10000);
+		};
+
+		function _initSockets() {
+			socket.client = new SockJS(CONSTANTS.apiUrl + '/notify');
+			socket.stomp = Stomp.over(socket.client);
+			socket.stomp.connect({}, function () {
+				socket.stomp.subscribe("/topic/notify", _notify);
+			});
+			socket.client.onclose = _reconnect;
+		};
+
+		_initSockets();
 	}
 
 })();
